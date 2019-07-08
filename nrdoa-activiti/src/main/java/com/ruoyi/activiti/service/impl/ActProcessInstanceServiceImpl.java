@@ -1,9 +1,5 @@
 package com.ruoyi.activiti.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.activiti.engine.RuntimeService;
@@ -15,10 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ruoyi.activiti.domain.ProcessDefinitionDto;
 import com.ruoyi.activiti.domain.ProcessInstanceDto;
 import com.ruoyi.activiti.service.ActProcessInstanceService;
-import com.ruoyi.activiti.utils.CommUtil;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.StringUtils;
@@ -34,14 +28,22 @@ public class ActProcessInstanceServiceImpl implements ActProcessInstanceService 
 	public AjaxResult startProcessInstanceById(String processDefinitionId) {
 		ProcessInstance pi = runtimeService.startProcessInstanceById(processDefinitionId);
 
+		int ab[] = {1,2};
+		ab[3]=10;
+		
 		AjaxResult a = AjaxResult.success("操作成功");
 		a.add("processInstacne", pi);
 		if (pi != null) {
 			return a;
 		} else {
+			
+			
+			
 			return AjaxResult.error("流程不存在");
 
 		}
+		
+		
 
 	}
 
@@ -67,10 +69,12 @@ public class ActProcessInstanceServiceImpl implements ActProcessInstanceService 
 		TableDataInfo data = new TableDataInfo();
 
 		if (StringUtils.isNotEmpty(processInstanceDto.getDeploymentId())) {
+		 
 			pq.deploymentId(processInstanceDto.getDeploymentId());
 		}
 		if (StringUtils.isNotEmpty(processInstanceDto.getProcessDefinitionName())) {
-			pq.processDefinitionName(processInstanceDto.getProcessDefinitionName());
+			pq.processInstanceNameLike(processInstanceDto.getProcessDefinitionName());
+//			pq.processDefinitionName(processInstanceDto.getProcessDefinitionName());
 		}
 
 		data.setTotal(pq.count());
