@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head>
+<th:block th:include="include :: header('流程实例管理')" />
+</head>
+<body class="gray-bg">
+
+	<div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="config-form">
+					<div class="select-list">
+						<ul>
+							<li>流程定义名称：<input type="text" name="processDefinitionName" />
+							</li>
+							<li>部署编号：<input type="text" name="deploymentId" />
+							</li>
+							<li><a class="btn btn-primary btn-rounded btn-sm"
+								onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm"
+								onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+
+			<div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success " onclick="$.operate.add()"
+					shiro:hasPermission="activiti:processInstance:add"> <i
+					class="fa fa-plus"></i> 添加
+				</a> <a class="btn btn-danger btn-del disabled"
+					onclick="$.operate.removeAll()"
+					shiro:hasPermission="activiti:processInstance:remove"> <i
+					class="fa fa-remove"></i> 删除
+				</a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script th:inline="javascript">
+    var removeFlag = [[${@permission.hasPermi('activiti:processInstance:remove')}]];
+    var modelFlag = [[${@permission.hasPermi('activiti:processInstance:model')}]];
+    var prefix = ctx + "activiti/processInstance";
+
+    $(function () {
+        var options = {
+        	uniqueId: "deploymentId",
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            removeUrl: prefix + "/remove",
+            modalName: "流程",
+            search: false,
+            showExport: false,
+            columns: [{
+                checkbox: true
+            },
+            
+            
+            
+            {
+                field: 'processDefinitionName',
+                title: '流程定义名称'
+            },
+            {
+                field: 'processDefinitionId',
+                title: '流程定义ID'
+            },
+            {
+                field: 'processDefinitionVersion',
+                title: '流程定义版本'
+            },
+            {
+                field: 'processInstanceId',
+                title: '流程实例ID'
+            },
+            {
+                field: 'deploymentId',
+                title: '部署ID'
+            },
+            {
+                field: 'name',
+                title: '流程名称'
+            },
+            {
+                field: 'processDefinitionKey',
+                title: '流程KEY'
+            },
+            {
+                field: 'description',
+                title: '流程描述'
+            },
+            {
+                field: 'processDefinitionVersion',
+                title: '流程版本'
+            } ,
+            {
+                field: 'suspended',
+                title: '是否挂载'
+            } ,
+            {
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var actions = [];
+                    actions.push('<a class="btn btn-primary btn-xs ' + modelFlag + '" href="#" onclick="covertToModel(\'' + row.processInstanceId + '\')"><i class="fa fa-play-circle-o"></i>转为模型</a> ');
+                    actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.deploymentId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                    return actions.join('');
+                }
+            }]
+        };
+        $.table.init(options);
+    });
+
+    function covertToModel(processInstanceId) {
+        $.modal.confirm("确定要将部署的流程转换为模型吗？", function () {
+        	var url = prefix + "/convertToModel/" + processInstanceId;
+            $.operate.get(url);
+        });
+    }
+</script>
+</body>
+</html>

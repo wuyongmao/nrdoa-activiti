@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增流程模型')" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-model-add">
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">流程标识：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="modelid" id="modelid" required>
+					<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 标识需要数字或字母的组合,保存后不能修改<span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">流程名称：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="modelname" id="modelname" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">描述：</label>
+				<div class="col-sm-8">
+					<textarea id="modeldes" name="modeldes" class="form-control"></textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+	<th:block th:include="include :: footer" />
+	<script type="text/javascript">
+		var prefix = ctx + "activiti/model";
+	
+		$("#form-model-add").validate({
+			rules:{
+				dictSort:{
+					digits:true
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	        	$.operate.save(prefix + "/add", $('#form-model-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>
