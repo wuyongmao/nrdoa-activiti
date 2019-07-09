@@ -33,10 +33,7 @@ public class ActProcessInstanceServiceImpl implements ActProcessInstanceService 
 	@Override
 	public AjaxResult startProcessInstanceById(String processDefinitionId) {
 		ProcessInstance pi = runtimeService.startProcessInstanceById(processDefinitionId);
-
-		int ab[] = { 1, 2 };
-		ab[3] = 10;
-
+  
 		AjaxResult a = AjaxResult.success("操作成功");
 		a.add("processInstacne", pi);
 		if (pi != null) {
@@ -118,6 +115,13 @@ public class ActProcessInstanceServiceImpl implements ActProcessInstanceService 
 		data.setRows(lms);
 
 		return data;
+
+	}
+
+	@Override
+	public void deleteProcessInstance(String processInstanceId, String deleteReason) {
+		// TODO Auto-generated method stub
+		runtimeService.deleteProcessInstance(processInstanceId, deleteReason);
 
 	}
 

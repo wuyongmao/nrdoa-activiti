@@ -28,7 +28,7 @@ import org.springframework.transaction.PlatformTransactionManager;
  * @author ruoyi
  */
 @Configuration
-//@ComponentScan("org.activiti.rest.diagram")
+@ComponentScan("org.activiti.rest.diagram")
 
 public class ActivitiConfig
 {

@@ -1,5 +1,6 @@
 package com.ruoyi.activiti.controller;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,11 +33,11 @@ public class ActProcessInstanceController extends BaseController {
 	@GetMapping("/tt")
 	@ResponseBody
 	public TableDataInfo getList(ProcessInstanceDto pid) {
-		if(pid==null) {
-			pid =new ProcessInstanceDto();
+		if (pid == null) {
+			pid = new ProcessInstanceDto();
 		}
-		return  actProcessInstanceService.getProcessInstanceByExample(pid);
- 
+		return actProcessInstanceService.getProcessInstanceByExample(pid);
+
 	}
 
 	@GetMapping("/activiti/processInstance")
@@ -44,12 +45,12 @@ public class ActProcessInstanceController extends BaseController {
 		return prefix + "/processInstance";
 	}
 
-//	@RequiresPermissions("activiti:process:list")
+	@RequiresPermissions("activiti:process:list")
 	@PostMapping("/activiti/processInstance/list")
 	@ResponseBody
 	public TableDataInfo list(ProcessInstanceDto pid) {
-		if(pid==null) {
-			pid =new ProcessInstanceDto();
+		if (pid == null) {
+			pid = new ProcessInstanceDto();
 		}
 		BeanHelper.beanAttributeValueTrim(pid);
 		return actProcessInstanceService.getProcessInstanceByExample(pid);
@@ -58,14 +59,14 @@ public class ActProcessInstanceController extends BaseController {
 
 	/**
 	 * 查看当前流程状态图
-	 * http://localhost:8888/Hi?processDefinitionId=nrdleave3:1:10006&processInstanceId=15001
+	 * http://localhost:8888/activiti/processInstance/viewCurrentPic?processDefinitionId=nrdleave3:1:10006&processInstanceId=15001
 	 * 
 	 * @param processDefinitionId 流程定义Id
 	 * @param processInstanceId   流程实例Id
 	 * @return
 	 */
-	@RequestMapping("/activiti/processInstance/")
-	public String viewCurrentPicBy(String processDefinitionId, String processInstanceId) {
+	@RequestMapping("/viewCurrentPic")
+	public String viewCurrentPicByDefIdInsId(String processDefinitionId, String processInstanceId) {
 		return "activiti/processInstance/index.html";
 	}
 
@@ -77,8 +78,7 @@ public class ActProcessInstanceController extends BaseController {
 	 * @throws Exception
 	 */
 	@Log(title = "启动流程", businessType = BusinessType.UPDATE)
-//    @RequiresPermissions("activiti:model:deploy")
-//  @RequiresPermissions("activiti:processInstance:start")
+	@RequiresPermissions("activiti:processInstance:start")
 
 	@GetMapping("/activiti/processInstance/startById/{processDefinitionId}")
 	@ResponseBody
@@ -86,11 +86,27 @@ public class ActProcessInstanceController extends BaseController {
 		return actProcessInstanceService.startProcessInstanceById(processDefinitionId);
 	}
 
+	@RequiresPermissions("activiti:processInstance:start")
+
 	@Log(title = "启动流程", businessType = BusinessType.UPDATE)
 	@GetMapping("/activiti/processInstance/startByKey/{processDefinitionKey}")
 	@ResponseBody
 	public AjaxResult startProcessInstanceByKey(@PathVariable("processDefinitionKey") String processDefinitionKey) {
 		return actProcessInstanceService.startProcessInstanceByKey(processDefinitionKey);
+	}
+
+	@RequiresPermissions("activiti:processInstance:remove")
+
+	@Log(title = "启动流程", businessType = BusinessType.UPDATE)
+	@GetMapping("/activiti/processInstance/remove/{processInstanceId}")
+	@ResponseBody
+	public AjaxResult removeProcessInstanceById(@PathVariable("processInstanceId") String processInstanceId) {
+		try {
+			actProcessInstanceService.deleteProcessInstance(processInstanceId, "测试");
+		} catch (Exception e) {
+			return AjaxResult.error(e.getMessage());
+		}
+		return AjaxResult.success();
 	}
 
 }

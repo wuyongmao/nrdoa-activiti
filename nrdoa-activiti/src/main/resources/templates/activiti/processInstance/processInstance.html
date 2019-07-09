@@ -28,7 +28,7 @@
 			</div>
 
 			<div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-				 <a class="btn btn-danger btn-del disabled"
+				<a class="btn btn-danger btn-del disabled"
 					onclick="$.operate.removeAll()"
 					shiro:hasPermission="activiti:processInstance:remove"> <i
 					class="fa fa-remove"></i> 删除
@@ -44,16 +44,19 @@
     var removeFlag = [[${@permission.hasPermi('activiti:processInstance:remove')}]];
     var stopFlag = [[${@permission.hasPermi('activiti:processInstance:stop')}]];
     var startFlag = [[${@permission.hasPermi('activiti:processInstance:start')}]];
+    var hisFlag = [[${@permission.hasPermi('activiti:processInstance:his')}]];
     var prefix = ctx + "activiti/processInstance";
    
     $(function () {
         var options = {
-        	uniqueId: "deploymentId",
+           uniqueId: "processInstanceId",
             url: prefix + "/list",
             removeUrl: prefix + "/remove",
             modalName: "流程",
             search: false,
             showExport: false,
+            pageSize:10,
+            pageList:[10,20,50,100],
             columns: [{
                 checkbox: true
             },
@@ -114,7 +117,7 @@
                 title: '开始时间'
             },
             {
-                field: 'startTime',
+                field: 'endTime',
                 title: '结束时间'
             },
             
@@ -129,8 +132,10 @@
                     var actions = [];
                     actions.push('<a class="btn btn-warning btn-xs ' + stopFlag + '" href="#" onclick="toStop(\'' + row.processInstanceId + '\')"><i class="fa fa-pause"></i>暂停</a> ');
                     actions.push('<a class="btn btn-primary btn-xs ' + startFlag + '" href="#" onclick="toStart(\'' + row.processInstanceId + '\')"><i class="fa fa-play-circle-o"></i>运行</a> ');
-                    actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.deploymentId + '\')"><i class="fa fa-remove"></i>删除</a>');
-                                return actions.join('');
+                    actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="toRemove(\'' + row.processInstanceId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                    actions.push('<a class="btn btn-primary btn-xs ' + hisFlag + '" href="#" onclick="hisShow(\''+row.processDefinitionId+'\',\'' + row.processInstanceId + '\')"><i class="fa fa-play-circle-o"></i>历史</a> ');
+
+                    return actions.join('');
                 }
             }]
         };
@@ -142,6 +147,22 @@
             $.operate.get(url);
         });
     }
+    function hisShow(processDefinitionId,processInstanceId) {
+        	var url =    "/viewCurrentPic?processDefinitionId="+processDefinitionId+"&processInstanceId=" + processInstanceId;
+    		    $.modal.openFull("流程图", url );
+ 		 //   $.modal.openFull("流程图", url,1200,600);
+ 		 //   $.modal.openTab("流程图", url);
+ 		   
+    }
+    
+    function toRemove(processInstanceId) {
+        $.modal.confirm("确定是否删除？", function () {
+        	var url = prefix + "/remove/" + processInstanceId;
+            $.operate.get(url);
+        });
+    }
+    
+    
     function toStop(processInstanceId) {
         $.modal.confirm("确定是否暂停？", function () {
         	var url = prefix + "/toStop/" + processInstanceId;
