@@ -3,6 +3,7 @@ package com.ruoyi.activiti.domain;
 import java.util.Map;
 
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 
 import com.ruoyi.common.core.domain.BaseActDto;
@@ -16,11 +17,6 @@ public class ProcessInstanceDto extends BaseActDto {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 流程编号
-	 */
-	private String processId;
-
-	/**
 	 * 流程名称
 	 */
 	private String name;
@@ -31,6 +27,9 @@ public class ProcessInstanceDto extends BaseActDto {
 	private Integer processDefinitionVersion;
 	private String businessKey;
 
+	private Map<String, Object> processVariables;
+
+	private String activityId;
 	/**
 	 * 部署编号
 	 */
@@ -40,17 +39,102 @@ public class ProcessInstanceDto extends BaseActDto {
 	private Boolean latest;
 	private String tenantId;
 	private String startableByUser;
+	/**
+	 * 资源文件名称
+	 */
+	private String resourceName;
 
 	/**
 	 * 描述信息
 	 */
 	private String description;
+	/**
+	 * 图片资源文件名称
+	 */
+	private String diagramResourceName;
 
-	private Map<String, Object> processVariables;
+	private String procInstId;
 
-	public ProcessInstanceDto(Deployment processDefinition) {
-		this.setProcessId(processDefinition.getId());
-		this.name = processDefinition.getName();
+	private String processInstanceId;
+
+	private String taskId;
+	private String startUserId;
+	private String actName;
+	private String assignee;
+	
+	
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
+	public String getStartUserId() {
+		return startUserId;
+	}
+
+	public void setStartUserId(String startUserId) {
+		this.startUserId = startUserId;
+	}
+
+	public String getActName() {
+		return actName;
+	}
+
+	public void setActName(String actName) {
+		this.actName = actName;
+	}
+
+	public String getAssignee() {
+		return assignee;
+	}
+
+	public void setAssignee(String assignee) {
+		this.assignee = assignee;
+	}
+
+	public String getResourceName() {
+		return resourceName;
+	}
+
+	public void setResourceName(String resourceName) {
+		this.resourceName = resourceName;
+	}
+
+	public String getDiagramResourceName() {
+		return diagramResourceName;
+	}
+
+	public void setDiagramResourceName(String diagramResourceName) {
+		this.diagramResourceName = diagramResourceName;
+	}
+
+	public String getProcInstId() {
+		return procInstId;
+	}
+
+	public void setProcInstId(String procInstId) {
+		this.procInstId = procInstId;
+	}
+
+	public String getProcessInstanceId() {
+		return processInstanceId;
+	}
+
+	public void setProcessInstanceId(String processInstanceId) {
+		this.processInstanceId = processInstanceId;
+	}
+
+
+
+	public String getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(String activityId) {
+		this.activityId = activityId;
 	}
 
 	public String getProcessDefinitionName() {
@@ -105,31 +189,30 @@ public class ProcessInstanceDto extends BaseActDto {
 		return serialVersionUID;
 	}
 
-	public ProcessInstanceDto(ProcessInstance processInstance) {
+	public ProcessInstanceDto(ProcessDefinition processDefinition) {
+		this.resourceName = processDefinition.getResourceName();
+		this.diagramResourceName = processDefinition.getDiagramResourceName();
+	}
 
-		this.processDefinitionName = processInstance.getProcessDefinitionName();
-		this.processDefinitionId = processInstance.getProcessDefinitionId();
-		this.processDefinitionKey = processInstance.getProcessDefinitionKey();
-		this.processDefinitionVersion = processInstance.getProcessDefinitionVersion();
-		this.businessKey = processInstance.getBusinessKey();
-		this.processVariables = processInstance.getProcessVariables();
-		this.setProcessId(processInstance.getId());
-		this.name = processInstance.getName();
-		this.deploymentId = processInstance.getDeploymentId();
-		this.description = processInstance.getDescription();
-		this.suspended = processInstance.isSuspended();
+	public ProcessInstanceDto(ProcessInstance pi) {
+
+		this.processInstanceId = pi.getProcessInstanceId();
+		this.activityId = pi.getActivityId();
+
+		this.processDefinitionName = pi.getProcessDefinitionName();
+		this.processDefinitionId = pi.getProcessDefinitionId();
+		this.processDefinitionKey = pi.getProcessDefinitionKey();
+		this.processDefinitionVersion = pi.getProcessDefinitionVersion();
+		this.businessKey = pi.getBusinessKey();
+		this.processVariables = pi.getProcessVariables();
+		this.name = pi.getName();
+		this.deploymentId = pi.getDeploymentId();
+		this.description = pi.getDescription();
+		this.suspended = pi.isSuspended();
 	}
 
 	public ProcessInstanceDto() {
 
-	}
-
-	public String getProcessId() {
-		return processId;
-	}
-
-	public void setProcessId(String processId) {
-		this.processId = processId;
 	}
 
 	public String getName() {

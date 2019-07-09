@@ -1,5 +1,10 @@
 package com.ruoyi.activiti.service;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.ruoyi.activiti.domain.ProcessInstanceDto;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -29,4 +34,14 @@ public interface ActProcessInstanceService {
 	 */
 	public TableDataInfo seleteRunningProcess(ProcessInstanceDto processInstanceDto);
 
+	
+	/**
+	 * 运行流程查看
+	 * @param pid
+	 * @return
+	 */
+	TableDataInfo  getProcessInstanceByExample(  ProcessInstanceDto pid);
+	
+	
+	
 }

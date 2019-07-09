@@ -1,5 +1,7 @@
 package com.ruoyi.activiti.service.impl;
 
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.activiti.engine.RuntimeService;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ruoyi.activiti.domain.ProcessInstanceDto;
+import com.ruoyi.activiti.mapper.ProcessInstanceMapper;
 import com.ruoyi.activiti.service.ActProcessInstanceService;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -22,28 +25,27 @@ public class ActProcessInstanceServiceImpl implements ActProcessInstanceService 
 	protected static final Logger LOGGER = LoggerFactory.getLogger(ModelEditorJsonRestResource.class);
 
 	@Autowired
+	private ProcessInstanceMapper processInstanceMapper;
+
+	@Autowired
 	private RuntimeService runtimeService;
 
 	@Override
 	public AjaxResult startProcessInstanceById(String processDefinitionId) {
 		ProcessInstance pi = runtimeService.startProcessInstanceById(processDefinitionId);
 
-		int ab[] = {1,2};
-		ab[3]=10;
-		
+		int ab[] = { 1, 2 };
+		ab[3] = 10;
+
 		AjaxResult a = AjaxResult.success("操作成功");
 		a.add("processInstacne", pi);
 		if (pi != null) {
 			return a;
 		} else {
-			
-			
-			
+
 			return AjaxResult.error("流程不存在");
 
 		}
-		
-		
 
 	}
 
@@ -69,7 +71,7 @@ public class ActProcessInstanceServiceImpl implements ActProcessInstanceService 
 		TableDataInfo data = new TableDataInfo();
 
 		if (StringUtils.isNotEmpty(processInstanceDto.getDeploymentId())) {
-		 
+
 			pq.deploymentId(processInstanceDto.getDeploymentId());
 		}
 		if (StringUtils.isNotEmpty(processInstanceDto.getProcessDefinitionName())) {
@@ -93,6 +95,27 @@ public class ActProcessInstanceServiceImpl implements ActProcessInstanceService 
 		data.setRows(pq.orderByProcessInstanceId().desc()
 				.listPage(processInstanceDto.getPageNum(), processInstanceDto.getPageSize()).stream()
 				.map(ProcessInstanceDto::new).collect(Collectors.toList()));
+//		Stream<ProcessInstance>  aa=
+//		pq.orderByProcessInstanceId().desc()
+//		.listPage(processInstanceDto.getPageNum(), processInstanceDto.getPageSize()).stream()
+////		.map(null).collect(null)
+//		;
+
+//		List<ProcessInstanceDto> p= (List<ProcessInstanceDto>) data.getRows();
+
+		return data;
+
+	}
+
+	@Override
+	public TableDataInfo getProcessInstanceByExample(ProcessInstanceDto pid) {
+		long total = processInstanceMapper.getProcessInstanceByExampleCount(pid);
+
+		List<Map<String, Object>> lms = processInstanceMapper.getProcessInstanceByExample(pid);
+		TableDataInfo data = new TableDataInfo();
+
+		data.setTotal(total);
+		data.setRows(lms);
 
 		return data;
 

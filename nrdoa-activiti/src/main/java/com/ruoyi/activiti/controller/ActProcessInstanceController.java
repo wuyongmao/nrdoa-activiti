@@ -1,6 +1,5 @@
 package com.ruoyi.activiti.controller;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +29,16 @@ public class ActProcessInstanceController extends BaseController {
 	private ActProcessInstanceService actProcessInstanceService;
 	private String prefix = "activiti/processInstance";
 
+	@GetMapping("/tt")
+	@ResponseBody
+	public TableDataInfo getList(ProcessInstanceDto pid) {
+		if(pid==null) {
+			pid =new ProcessInstanceDto();
+		}
+		return  actProcessInstanceService.getProcessInstanceByExample(pid);
+ 
+	}
+
 	@GetMapping("/activiti/processInstance")
 	public String process() {
 		return prefix + "/processInstance";
@@ -38,10 +47,13 @@ public class ActProcessInstanceController extends BaseController {
 //	@RequiresPermissions("activiti:process:list")
 	@PostMapping("/activiti/processInstance/list")
 	@ResponseBody
-	public TableDataInfo list(ProcessInstanceDto processInstanceDto) {
-		BeanHelper.beanAttributeValueTrim(processInstanceDto);
-		
-		return actProcessInstanceService.seleteRunningProcess(processInstanceDto);
+	public TableDataInfo list(ProcessInstanceDto pid) {
+		if(pid==null) {
+			pid =new ProcessInstanceDto();
+		}
+		BeanHelper.beanAttributeValueTrim(pid);
+		return actProcessInstanceService.getProcessInstanceByExample(pid);
+//		return actProcessInstanceService.seleteRunningProcess(pid);
 	}
 
 	/**
