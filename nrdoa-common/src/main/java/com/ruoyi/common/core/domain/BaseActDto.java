@@ -18,7 +18,23 @@ public class BaseActDto implements Serializable
     /** 每页显示记录数 */
     private Integer pageSize;
 
-    /** 总记录数 */
+    private Integer offset = 0;
+    
+    public Integer getOffset() {
+    	if(pageNum !=null && pageNum>1) {
+    		
+    		offset = pageSize * (pageNum-1);
+    	}
+    	
+    	
+		return offset;
+	}
+
+	public void setOffset(Integer offset) {
+		this.offset = offset;
+	}
+
+	/** 总记录数 */
     private Integer total;
 
     public Integer getPageNum()
