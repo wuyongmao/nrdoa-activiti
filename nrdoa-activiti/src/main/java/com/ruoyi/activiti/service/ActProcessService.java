@@ -57,4 +57,14 @@ public interface ActProcessService
      * @return 结果
      */
     public boolean deleteProcessDefinitionByDeploymentIds(String ids);
+
+    
+    /**
+     * 流程启动
+     * @param processDefinitionId
+     * @return
+     */
+	public AjaxResult startProcessInstanceById(String processDefinitionId);
+	
+	
 }

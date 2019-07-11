@@ -5,6 +5,8 @@
 	<select id="getProcessInstanceByExample"
 		resultType="java.util.Map">
 		SELECT
+			RES.`SUSPENSION_STATE_`  AS 'suspensionState',
+		RES.ACT_ID_ as 'actId', 
 		RES.PROC_INST_ID_ as 'processInstanceId' ,
 		RES.BUSINESS_KEY_  as 'businessKey',
 		P.KEY_ AS 'processDefinitionKey',
@@ -12,23 +14,27 @@
 		P.NAME_ AS 'processDefinitionName',
 		P.VERSION_ AS 'processDefinitionVersion',
 		P.DEPLOYMENT_ID_ AS 'deploymentId'
+		,P.DESCRIPTION_ as 'description'
 		,P.DGRM_RESOURCE_NAME_ as 'dgrmResourceName'
+		
 		,hip.START_TIME_  as 'startTime'
 		,hip.END_TIME_   as 'endTime'
 		,hip.duration_    as 'duration'
 		,hip.start_user_id_  as 'startUserId'
-
+<!-- 
 		,hia.TASK_ID_   as 'taskId'
 		,hia.ACT_NAME_   as 'actName'
 		,hia.ACT_TYPE_  as 'actType'
 		,hia.ASSIGNEE_ as 'assignee'
+ -->
+		
 		FROM
 		ACT_RU_EXECUTION RES
 		INNER JOIN ACT_RE_PROCDEF P ON RES.PROC_DEF_ID_ = P.ID_
 		JOIN ACT_HI_PROCINST hip ON hip.PROC_INST_ID_ =RES.PROC_INST_ID_
-		LEFT JOIN ACT_HI_ACTINST hia ON hia.PROC_INST_ID_ =RES.PROC_INST_ID_ AND
-		hia.ACT_ID_ = RES.ACT_ID_
-      <where>
+	<!--	LEFT JOIN ACT_HI_ACTINST hia ON hia.PROC_INST_ID_ =RES.PROC_INST_ID_ AND
+ 		hia.ACT_ID_ = RES.ACT_ID_   AND hia.`END_TIME_` IS NOT NULL
+ -->      <where>
 			RES.PARENT_ID_ IS NULL
 			<if test="pid.deploymentId != null  and  pid.deploymentId != ''">
 				and P.DEPLOYMENT_ID_=#{pid.deploymentId}
@@ -45,18 +51,7 @@
 			<if test="pid.processDefinitionKey != null  and  pid.processDefinitionKey != ''">
 				and P.KEY_ =#{pid.processDefinitionKey}
 			</if>
-			
-			
-			<if test="pid.assignee != null  and  pid.assignee != ''">
-				and hia.ASSIGNEE_ =#{pid.assignee}
-			</if>
-			<if test="pid.taskId != null  and  pid.taskId != ''">
-				and hia.TASK_ID_ =#{pid.taskId}
-			</if>
-			
-			<if test="pid.actName != null  and  pid.actName != ''">
-				and hia.ACT_NAME_ =#{pid.actName}
-			</if>
+			 
 				 
 
 		</where>

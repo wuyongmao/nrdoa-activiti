@@ -1,5 +1,8 @@
 package com.ruoyi.activiti.controller;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.activiti.engine.ProcessEngine;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +31,10 @@ public class ActProcessInstanceController extends BaseController {
 
 	@Autowired
 	private ActProcessInstanceService actProcessInstanceService;
+
+	@Autowired
+	private ProcessEngine processEngine;
+
 	private String prefix = "activiti/processInstance";
 
 	@GetMapping("/tt")
@@ -77,27 +84,50 @@ public class ActProcessInstanceController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@Log(title = "启动流程", businessType = BusinessType.UPDATE)
+	@Log(title = "启动流程实例", businessType = BusinessType.UPDATE)
 	@RequiresPermissions("activiti:processInstance:start")
-
-	@GetMapping("/activiti/processInstance/startById/{processDefinitionId}")
+	@GetMapping("/activiti/processInstance/startById/{processInstanceId}")
 	@ResponseBody
-	public AjaxResult startProcessInstanceById(@PathVariable("processDefinitionId") String processDefinitionId) {
-		return actProcessInstanceService.startProcessInstanceById(processDefinitionId);
+	public AjaxResult startProcessInstanceById(@PathVariable("processInstanceId") String processInstanceId) {
+		return actProcessInstanceService.startProcessInstanceById(processInstanceId);
+	}
+
+	/**
+	 * 启动流程流程
+	 *
+	 * @param modelId
+	 * @return
+	 * @throws Exception
+	 */
+	@Log(title = "挂起流程实例", businessType = BusinessType.UPDATE)
+	@RequiresPermissions("activiti:processInstance:stop")
+	@GetMapping("/activiti/processInstance/stopById/{processInstanceId}")
+	@ResponseBody
+	public AjaxResult stopProcessInstanceById(@PathVariable("processInstanceId") String processInstanceId) {
+		return actProcessInstanceService.stopProcessInstanceById(processInstanceId);
 	}
 
 	@RequiresPermissions("activiti:processInstance:start")
 
-	@Log(title = "启动流程", businessType = BusinessType.UPDATE)
+	@Log(title = "删除流程实例", businessType = BusinessType.UPDATE)
 	@GetMapping("/activiti/processInstance/startByKey/{processDefinitionKey}")
 	@ResponseBody
 	public AjaxResult startProcessInstanceByKey(@PathVariable("processDefinitionKey") String processDefinitionKey) {
 		return actProcessInstanceService.startProcessInstanceByKey(processDefinitionKey);
 	}
 
+	@RequiresPermissions("activiti:processInstance:completeTask")
+
+	@Log(title = "办理流程实例", businessType = BusinessType.UPDATE)
+	@GetMapping("/activiti/processInstance/completeTask/{taskId}")
+	@ResponseBody
+	public AjaxResult completeTaskById(@PathVariable("taskId") String taskId) {
+		return actProcessInstanceService.completeTaskById(taskId);
+	}
+
 	@RequiresPermissions("activiti:processInstance:remove")
 
-	@Log(title = "启动流程", businessType = BusinessType.UPDATE)
+	@Log(title = "删除流程实例", businessType = BusinessType.UPDATE)
 	@GetMapping("/activiti/processInstance/remove/{processInstanceId}")
 	@ResponseBody
 	public AjaxResult removeProcessInstanceById(@PathVariable("processInstanceId") String processInstanceId) {
@@ -107,6 +137,16 @@ public class ActProcessInstanceController extends BaseController {
 			return AjaxResult.error(e.getMessage());
 		}
 		return AjaxResult.success();
+	}
+
+	/**
+	 * 读取带跟踪的流程图片
+	 * 
+	 * @throws Exception
+	 */
+	@GetMapping("/traceImage/{processInstanceId}")
+	public void traceImage(@PathVariable("processInstanceId") String processInstanceId, HttpServletResponse response)
+			throws Exception {
 	}
 
 }

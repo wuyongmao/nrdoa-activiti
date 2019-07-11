@@ -20,7 +20,7 @@ public class ProcessInstanceDto extends BaseActDto {
 	 * 流程名称
 	 */
 	private String name;
-
+    private Integer suspensionState;  //实例状态 1 2 
 	private String processDefinitionName;
 	private String processDefinitionId;
 	private String processDefinitionKey;
@@ -63,6 +63,14 @@ public class ProcessInstanceDto extends BaseActDto {
 	private String assignee;
 	
 	
+	public Integer getSuspensionState() {
+		return suspensionState;
+	}
+
+	public void setSuspensionState(Integer suspensionState) {
+		this.suspensionState = suspensionState;
+	}
+
 	public String getTaskId() {
 		return taskId;
 	}

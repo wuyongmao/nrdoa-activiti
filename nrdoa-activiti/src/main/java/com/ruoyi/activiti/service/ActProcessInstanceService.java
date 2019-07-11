@@ -12,12 +12,12 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public interface ActProcessInstanceService {
 
 	/**
-	 * 启动流程
+	 * 启动挂起流程
 	 * 
 	 * @param processDefinitionId
 	 * @return
 	 */
-	public AjaxResult startProcessInstanceById(String processDefinitionId);
+	public AjaxResult startProcessInstanceById(String processInstanceId);
 
 	public AjaxResult startProcessInstanceByKey(String processDefinitionKey);
 
@@ -39,6 +39,10 @@ public interface ActProcessInstanceService {
 	
 	
 	public void deleteProcessInstance(String processInstanceId,String deleteReason);
+
+	public AjaxResult stopProcessInstanceById(String processInstanceId);
+
+	public AjaxResult completeTaskById(String taskId);
 	
 
 }

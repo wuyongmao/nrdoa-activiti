@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.rest.editor.model.ModelEditorJsonRestResource;
@@ -29,21 +30,24 @@ public class ActProcessInstanceServiceImpl implements ActProcessInstanceService 
 
 	@Autowired
 	private RuntimeService runtimeService;
+	@Autowired
+	private TaskService taskService;
 
 	@Override
-	public AjaxResult startProcessInstanceById(String processDefinitionId) {
-		ProcessInstance pi = runtimeService.startProcessInstanceById(processDefinitionId);
-  
+	public AjaxResult startProcessInstanceById(String processInstanceId) {
+		runtimeService.activateProcessInstanceById(processInstanceId);
 		AjaxResult a = AjaxResult.success("操作成功");
-		a.add("processInstacne", pi);
-		if (pi != null) {
-			return a;
-		} else {
 
-			return AjaxResult.error("流程不存在");
+		return a;
 
-		}
+	}
 
+	@Override
+	public AjaxResult stopProcessInstanceById(String processInstanceId) {
+		runtimeService.suspendProcessInstanceById(processInstanceId);
+		AjaxResult a = AjaxResult.success("操作成功");
+
+		return a;
 	}
 
 	@Override
@@ -123,6 +127,12 @@ public class ActProcessInstanceServiceImpl implements ActProcessInstanceService 
 		// TODO Auto-generated method stub
 		runtimeService.deleteProcessInstance(processInstanceId, deleteReason);
 
+	}
+
+	@Override
+	public AjaxResult completeTaskById(String taskId) {
+		taskService.complete(taskId);
+		return AjaxResult.success();
 	}
 
 }
