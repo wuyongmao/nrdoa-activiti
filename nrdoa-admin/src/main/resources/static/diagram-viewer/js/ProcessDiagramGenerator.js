@@ -1037,10 +1037,12 @@ var ProcessDiagramGenerator = {
 			name: activity.getProperty("name"),
 			type: activity.getProperty("type")
 		};
+//		console.info("-------name------");
+		console.info(activity);
 		var TPL_ACTIVITY_INFO = '' 
-				+ '<div><b>activityId</b>: {activityId}</div>'
-				+ '<div><b>name</b>: {name}</div>'
-				+ '<div><b>type</b>: {type}</div>';
+				+ '<div><b>节点Id</b>: {activityId}</div>'
+				+ '<div><b>名称</b>: {name}</div>'
+				+ '<div><b>类型</b>: {type}</div>';
 		var TPL_CALLACTIVITY_INFO = ''
 				+ '<div><b>collapsed</b>: {collapsed}</div>'
 				+ '<div><b>processDefinitonKey</b>: {processDefinitonKey}</div>';

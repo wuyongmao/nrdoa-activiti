@@ -29,7 +29,7 @@ import com.ruoyi.activiti.imgUtil.DefaultProcessDiagramGenerator;
  * @author ruoyi
  */
 @Configuration
-@ComponentScan("org.activiti.rest.diagram")
+//@ComponentScan("org.activiti.rest.diagram")
 
 public class ActivitiConfig {
 	@Value("${activitidataType}")

@@ -6,6 +6,7 @@ import org.activiti.engine.ProcessEngine;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,7 +74,10 @@ public class ActProcessInstanceController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/viewCurrentPic")
-	public String viewCurrentPicByDefIdInsId(String processDefinitionId, String processInstanceId) {
+	public String viewCurrentPicByDefIdInsId(String processDefinitionId, String processInstanceId,Model m) {
+		 m.addAttribute("processDefinitionId", processDefinitionId);
+		 m.addAttribute("processInstanceId", processInstanceId);
+		
 		return "activiti/processInstance/index.html";
 	}
 

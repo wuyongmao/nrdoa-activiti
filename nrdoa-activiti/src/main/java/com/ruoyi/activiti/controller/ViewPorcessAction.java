@@ -72,6 +72,7 @@ public class ViewPorcessAction {
 	@Autowired
 	TaskService taskService;
 
+
 	/**
 	 * 读取带跟踪的流程图片
 	 * 
@@ -226,6 +227,8 @@ public class ViewPorcessAction {
 		}
 	}
 
+	 
+
 	@GetMapping("/tt3/{processInstanceId}")
 	public void traceImage3(@PathVariable("processInstanceId") String processInstanceId, HttpServletResponse response)
 			throws Exception {
@@ -287,20 +290,18 @@ public class ViewPorcessAction {
 	public boolean isFinished(String processInstanceId) {
 		return historyService.createHistoricProcessInstanceQuery().finished().processInstanceId(processInstanceId)
 				.count() > 0;
-	} 
+	}
 
 	@GetMapping("/getShineProcImage")
 	@ResponseBody
 	public String getShineProcImage(HttpServletRequest request, HttpServletResponse resp, String processInstanceId)
 			throws IOException {
- 
-  		
-		
+
 		JSONObject result = new JSONObject();
 		JSONArray shineProImages = new JSONArray();
 		BASE64Encoder encoder = new BASE64Encoder();
 		InputStream imageStream = generateStream(request, resp, processInstanceId, true);
-		
+
 		if (imageStream != null) {
 			String imageCurrentNode = Base64Utils.ioToBase64(imageStream);
 			if (StringUtils.isNotBlank(imageCurrentNode)) {
@@ -308,8 +309,6 @@ public class ViewPorcessAction {
 			}
 		}
 
-	
-		
 		InputStream imageNoCurrentStream = generateStream(request, resp, processInstanceId, false);
 		if (imageNoCurrentStream != null) {
 			String imageNoCurrentNode = Base64Utils.ioToBase64(imageNoCurrentStream);

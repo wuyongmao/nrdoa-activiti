@@ -1,4 +1,4 @@
-﻿<html>
+﻿<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <link th:href="@{/diagram-viewer/style.css}" rel="stylesheet"/>
@@ -21,6 +21,9 @@
 </head>
 <body>
 <div class="wrapper">
+   
+<p id='processInstanceId' th:text="${processInstanceId}" />
+<p id='processDefinitionId' th:text="${processDefinitionId}" />
   <div id="pb1"></div>
   <div id="overlayBox" >
     <div id="diagramBreadCrumbs" class="diagramBreadCrumbs" onmousedown="return false" onselectstart="return false"></div>
@@ -28,6 +31,9 @@
     <div class="diagram-info" id="diagramInfo"></div>
   </div>
 </div>
+ 
+
+
 <script language='javascript'>
 var DiagramGenerator = {};
 var pb1;
@@ -39,10 +45,10 @@ $(document).ready(function(){
     var pair = vars[i].split("=");
     query_string[pair[0]] = pair[1];
   } 
-  
+ // var ab = $("#processInstanceId").text(); 
   var processDefinitionId = query_string["processDefinitionId"];
   var processInstanceId = query_string["processInstanceId"];
-  
+   
   console.log("Initialize progress bar");
   
   pb1 = new $.ProgressBar({
@@ -71,6 +77,9 @@ $(document).ready(function(){
     on: {
       click: function(canvas, element, contextObject){
         var mouseEvent = this;
+        console.info("---ProcessDiagramGenerator---");
+        console.info(contextObject);
+        
         console.log("[CLICK] mouseEvent: %o, canvas: %o, clicked element: %o, contextObject: %o", mouseEvent, canvas, element, contextObject);
 
         if (contextObject.getProperty("type") == "callActivity") {
@@ -106,7 +115,6 @@ $(document).ready(function(){
   var baseUrl = window.document.location.protocol + "//" + window.document.location.host + "/";
   var shortenedUrl = window.document.location.href.replace(baseUrl, "");
  baseUrl = baseUrl + shortenedUrl.substring(0, shortenedUrl.indexOf("/"));
-  
   ActivitiRest.options = {
     processInstanceHighLightsUrl:"/process-instance/{processInstanceId}/highlights?callback=?",
     processDefinitionUrl:  "/process-definition/{processDefinitionId}/diagram-layout?callback=?",
